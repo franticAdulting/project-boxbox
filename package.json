@@ -5,15 +5,19 @@
   "author": "frantic_adulting <frantic.adulting@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "migrate:make": "knex migrate:make",
-    "migrate:latest": "knex migrate:latest",
-    "migrate:rollback": "knex migrate:rollback",
-    "migrate:up": "knex migrate:up",
-    "migrate:down": "knex migrate:down",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:reset": "prisma migrate reset",
     "start-server": "docker-compose -f docker-compose.dev.yml up --build --force-recreate",
     "start": "nodemon index.ts"
   },
+  "scriptsComments": {
+    "db:push": "Deploys database schema changes to the database. Meant for rapid iteration.",
+    "db:migrate": "Commits the db schema changes. Creates a migration file.",
+    "db:reset": "Resets the database and applies all migrations."
+  },
   "dependencies": {
+    "@prisma/client": "^4.11.0",
     "@types/convict": "^6.1.1",
     "@types/express": "^4.17.15",
     "@types/node": "^18.11.18",
@@ -22,8 +26,6 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "knex": "^2.4.2",
-    "objection": "^3.0.1",
     "pg": "^8.9.0",
     "uuid": "^9.0.0"
   },
@@ -37,6 +39,7 @@
     "eslint-config-prettier": "^8.6.0",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.3",
+    "prisma": "^4.11.0",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.4"
   }
