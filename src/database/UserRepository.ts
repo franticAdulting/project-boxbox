@@ -1,5 +1,5 @@
-import { v4 } from 'uuid'
-import { UserModel } from './UserModel'
+import { PrismaClient } from '@prisma/client'
+import { prismaClient } from './DatabaseClient'
 
 export interface User {
   id: string
@@ -8,6 +8,11 @@ export interface User {
 
 export class UserRepository {
   private static instance: UserRepository
+  private readonly prismaClient: PrismaClient
+
+  constructor() {
+    this.prismaClient = prismaClient
+  }
 
   public static getInstance(): UserRepository {
     if (!this.instance) {
@@ -18,15 +23,12 @@ export class UserRepository {
   }
 
   public async createUser(email: string): Promise<User> {
-    const user = (
-      await UserModel.query().insertAndFetch({
-        id: v4(),
+    const user = await this.prismaClient.user.create({
+      data: {
         email,
-      })
-    ).toJSON()
+      },
+    })
 
-    console.log(user)
-
-    return user as User
+    return user
   }
 }

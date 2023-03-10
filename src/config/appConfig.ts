@@ -10,6 +10,11 @@ const appConvict = Convict({
     env: 'NODE_ENV',
   },
   postgres: {
+    url: {
+      format: String,
+      default: '',
+      env: 'POSTGRES_URL',
+    },
     host: {
       format: String,
       default: 'localhost',

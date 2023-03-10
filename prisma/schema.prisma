@@ -7,7 +7,54 @@ datasource db {
   url      = env("POSTGRES_URL")
 }
 
-model user {
-  id    String  @id @unique(map: "user_id_unique") @db.Uuid
-  email String?
+model User {
+  id         String      @id @default(uuid())
+  email      String      @unique
+  doTodays   DoToday[]
+  doTodayAts DoTodayAt[]
+  doBefores  DoBefore[]
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @default(now()) @map("updated_at")
+  isDeleted  Boolean     @default(false) @map("is_deleted")
+
+  @@map("user")
+}
+
+model DoToday {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  user        User     @relation(fields: [userId], references: [id])
+  description String
+  startDate   DateTime @map("start_date")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @map("updated_at")
+  isDeleted   Boolean  @default(false) @map("is_deleted")
+
+  @@map("do_today")
+}
+
+model DoTodayAt {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  user        User     @relation(fields: [userId], references: [id])
+  description String
+  startDate   DateTime @map("start_date")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @map("updated_at")
+  isDeleted   Boolean  @default(false) @map("is_deleted")
+
+  @@map("do_today_at")
+}
+
+model DoBefore {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  user        User     @relation(fields: [userId], references: [id])
+  description String
+  endDate     DateTime @map("end_date")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @map("updated_at")
+  isDeleted   Boolean  @default(false) @map("is_deleted")
+
+  @@map("do_before")
 }
