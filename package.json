@@ -9,12 +9,14 @@
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
     "start-server": "docker-compose -f docker-compose.dev.yml up --build --force-recreate",
-    "start": "nodemon index.ts"
+    "start": "nodemon index.ts",
+    "compile": "tsc"
   },
   "scriptsComments": {
     "db:push": "Deploys database schema changes to the database. Meant for rapid iteration.",
     "db:migrate": "Commits the db schema changes. Creates a migration file.",
-    "db:reset": "Resets the database and applies all migrations."
+    "db:reset": "Resets the database and applies all migrations.",
+    "compile": "Compiles Typescript (noEmit should be set to false inside tsconfig to avoid generating js files)."
   },
   "dependencies": {
     "@prisma/client": "^4.11.0",

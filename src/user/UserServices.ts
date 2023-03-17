@@ -1,5 +1,3 @@
-import { UserRepository } from '../database/repository/UserRepository'
-
 export class UserServices {
   public static instance: UserServices
 
@@ -12,7 +10,6 @@ export class UserServices {
   }
 
   public async createUser(email: string) {
-    await UserRepository.getInstance().createUser(email)
     console.log('creatingUser: ', email)
   }
 
