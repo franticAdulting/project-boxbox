@@ -1,14 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { inject, injectable } from 'inversify'
 import { DatabaseClient } from '../DatabaseClient'
-import { User } from './UserRepository'
-
-export interface DoBefore {
-  id: string
-  description: string
-  endDate: Date
-  user: User
-}
+import { DoBefore } from '../types'
 
 @injectable()
 export class DoBeforeRepository {

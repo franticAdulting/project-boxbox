@@ -1,11 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { inject, injectable } from 'inversify'
 import { DatabaseClient } from '../DatabaseClient'
-
-export interface User {
-  id: string
-  email: string
-}
+import { User } from '../types'
 
 @injectable()
 export class UserRepository {

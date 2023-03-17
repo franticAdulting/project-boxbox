@@ -1,17 +1,10 @@
 import { PrismaClient } from '@prisma/client'
 import { inject, injectable } from 'inversify'
 import { DatabaseClient } from '../DatabaseClient'
-import { User } from './UserRepository'
-
-export interface DoTodayAt {
-  id: string
-  description: string
-  startDate: Date
-  user: User
-}
+import { DoTodayAt } from '../types'
 
 @injectable()
-export class DoTodayRepository {
+export class DoTodayAtRepository {
   private readonly prismaClient: PrismaClient
 
   constructor(@inject(DatabaseClient) databaseClient: DatabaseClient) {
