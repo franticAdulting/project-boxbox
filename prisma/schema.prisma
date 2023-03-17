@@ -15,7 +15,6 @@ model User {
   doBefores  DoBefore[]
   createdAt  DateTime    @default(now()) @map("created_at")
   updatedAt  DateTime    @default(now()) @map("updated_at")
-  isDeleted  Boolean     @default(false) @map("is_deleted")
 
   @@map("user")
 }
@@ -28,7 +27,6 @@ model DoToday {
   startDate   DateTime @map("start_date")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @default(now()) @map("updated_at")
-  isDeleted   Boolean  @default(false) @map("is_deleted")
 
   @@map("do_today")
 }
@@ -41,7 +39,6 @@ model DoTodayAt {
   startDate   DateTime @map("start_date")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @default(now()) @map("updated_at")
-  isDeleted   Boolean  @default(false) @map("is_deleted")
 
   @@map("do_today_at")
 }
@@ -54,7 +51,6 @@ model DoBefore {
   endDate     DateTime @map("end_date")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @default(now()) @map("updated_at")
-  isDeleted   Boolean  @default(false) @map("is_deleted")
 
   @@map("do_before")
 }

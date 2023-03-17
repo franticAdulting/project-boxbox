@@ -45,7 +45,6 @@ export class DoBeforeRepository {
     const doBefore = await this.prismaClient.doBefore.findFirstOrThrow({
       where: {
         id,
-        isDeleted: false,
       },
       include: {
         user: true,
@@ -53,6 +52,71 @@ export class DoBeforeRepository {
     })
 
     return doBefore
+  }
+
+  public async fetchDoBeforeByUserId(userId: string): Promise<DoBefore[]> {
+    return await this.prismaClient.doBefore.findMany({
+      where: {
+        userId,
+      },
+      include: {
+        user: true,
+      },
+    })
+  }
+
+  // Fetches all DoBefores that end after the given date (exclusive).
+  public async fetchDoBeforeAfter(after: Date): Promise<DoBefore[]> {
+    return await this.prismaClient.doBefore.findMany({
+      where: {
+        endDate: {
+          gt: after,
+        },
+      },
+      include: {
+        user: true,
+      },
+    })
+  }
+
+  // Fetches all DoBefores that end before the given date (inclusive).
+  public async fetchDoBeforeBefore(before: Date): Promise<DoBefore[]> {
+    return await this.prismaClient.doBefore.findMany({
+      where: {
+        endDate: {
+          lte: before,
+        },
+      },
+      include: {
+        user: true,
+      },
+    })
+  }
+
+  // Fetches all DoBefores that end after a given date (exclusive) and before a given date (inclusive).
+  public async fetchDoBeforeBetween(
+    after: Date,
+    before: Date
+  ): Promise<DoBefore[]> {
+    return await this.prismaClient.doBefore.findMany({
+      where: {
+        AND: [
+          {
+            endDate: {
+              gt: after,
+            },
+          },
+          {
+            endDate: {
+              lte: before,
+            },
+          },
+        ],
+      },
+      include: {
+        user: true,
+      },
+    })
   }
 
   public async updateDoBefore(
@@ -63,7 +127,6 @@ export class DoBeforeRepository {
     const doBefore = await this.prismaClient.doBefore.findFirstOrThrow({
       where: {
         id,
-        isDeleted: false,
       },
     })
 
@@ -82,19 +145,9 @@ export class DoBeforeRepository {
   }
 
   public async deleteDoBefore(id: string): Promise<DoBefore> {
-    await this.prismaClient.doBefore.findFirstOrThrow({
+    return await this.prismaClient.doBefore.delete({
       where: {
         id,
-        isDeleted: false,
-      },
-    })
-
-    return await this.prismaClient.doBefore.update({
-      where: {
-        id,
-      },
-      data: {
-        isDeleted: true,
       },
       include: {
         user: true,

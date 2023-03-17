@@ -29,7 +29,6 @@ export class UserRepository {
     const user = await this.prismaClient.user.findFirstOrThrow({
       where: {
         id,
-        isDeleted: false,
       },
     })
 
@@ -40,7 +39,6 @@ export class UserRepository {
     await this.prismaClient.user.findFirstOrThrow({
       where: {
         id,
-        isDeleted: false,
       },
     })
 
@@ -55,19 +53,9 @@ export class UserRepository {
   }
 
   public async deleteUser(id: string): Promise<User> {
-    await this.prismaClient.user.findFirstOrThrow({
+    return await this.prismaClient.user.delete({
       where: {
         id,
-        isDeleted: false,
-      },
-    })
-
-    return await this.prismaClient.user.update({
-      where: {
-        id,
-      },
-      data: {
-        isDeleted: true,
       },
     })
   }

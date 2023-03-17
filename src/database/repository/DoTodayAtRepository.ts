@@ -45,7 +45,6 @@ export class DoTodayRepository {
     const doTodayAt = await this.prismaClient.doTodayAt.findFirstOrThrow({
       where: {
         id,
-        isDeleted: false,
       },
       include: {
         user: true,
@@ -63,7 +62,6 @@ export class DoTodayRepository {
     const doTodayAt = await this.prismaClient.doTodayAt.findFirstOrThrow({
       where: {
         id,
-        isDeleted: false,
       },
     })
 
@@ -82,19 +80,9 @@ export class DoTodayRepository {
   }
 
   public async deleteDoTodayAt(id: string): Promise<DoTodayAt> {
-    await this.prismaClient.doTodayAt.findFirstOrThrow({
+    return await this.prismaClient.doTodayAt.delete({
       where: {
         id,
-        isDeleted: false,
-      },
-    })
-
-    return await this.prismaClient.doTodayAt.update({
-      where: {
-        id,
-      },
-      data: {
-        isDeleted: true,
       },
       include: {
         user: true,
