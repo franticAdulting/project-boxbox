@@ -1,31 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-
-// export class DatabaseClient {
-//   private static instance: PrismaClient
-
-//   public static getInstance(): PrismaClient {
-//     if (!this.instance) {
-//       const logDefinitions: Prisma.LogDefinition[] = [
-//         { level: 'query', emit: 'event' },
-//       ]
-
-//       const prismaClient = new PrismaClient({
-//         log: logDefinitions,
-//         errorFormat: 'pretty',
-//       })
-
-//       prismaClient.$on('query', (e) => {})
-//     }
-
-//     return this.instance
-//   }
-
-//   public static initPrismaClient() {
-//     this.instance.$on('query', (e) => {
-//       console.log(e)
-//     })
-//   }
-// }
+import { injectable } from 'inversify'
 
 const prisma = new PrismaClient({
   log: [{ level: 'query', emit: 'event' }],
@@ -36,14 +10,16 @@ prisma.$on('query', (e) => {
   console.log(e)
 })
 
-let prismaSingleton: PrismaClient
+// Really meant to be a single source of PrismaClient
+@injectable()
+export class DatabaseClient {
+  private prismaClientSingleton: PrismaClient
 
-const getSingleton = (): PrismaClient => {
-  if (!prismaSingleton) {
-    prismaSingleton = prisma
+  constructor() {
+    this.prismaClientSingleton = prisma
   }
 
-  return prismaSingleton
+  public getPrismaClient(): PrismaClient {
+    return this.prismaClientSingleton
+  }
 }
-
-export const prismaClient = getSingleton()

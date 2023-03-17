@@ -1,4 +1,4 @@
-import { UserRepository } from '../database/UserRepository'
+import { UserRepository } from '../database/repository/UserRepository'
 
 export class UserServices {
   public static instance: UserServices
