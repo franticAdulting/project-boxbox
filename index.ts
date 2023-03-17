@@ -1,7 +1,14 @@
 // Import the express in typescript file
 import cors from 'cors'
 import express from 'express'
-import userRouter from './src/router/UserRouter'
+import { getLogger } from './src/logger/winston'
+
+const logger = getLogger()
+
+logger.error('test error')
+logger.warn('test warn')
+logger.info('test info')
+logger.http('test http')
 
 // Initialize the express engine
 const app: express.Application = express()
@@ -31,7 +38,7 @@ const port = 4000
 //   res.send(req.body);
 // });
 
-app.use('/user', userRouter)
+// app.use('/user', userRouter)
 
 // Server setup
 app.listen(port, () => {

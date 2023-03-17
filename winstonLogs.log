@@ -1,0 +1,8 @@
+{"level":"error","message":"test error","timestamp":"2023-03-17T04:55:11.809Z"}
+{"level":"warn","message":"test warn","timestamp":"2023-03-17T04:55:11.811Z"}
+{"level":"info","message":"test info","timestamp":"2023-03-17T04:55:11.811Z"}
+{"level":"http","message":"test http","timestamp":"2023-03-17T04:55:11.812Z"}
+{"level":"error","message":"test error","timestamp":"2023-03-17T04:55:26.556Z"}
+{"level":"warn","message":"test warn","timestamp":"2023-03-17T04:55:26.559Z"}
+{"level":"info","message":"test info","timestamp":"2023-03-17T04:55:26.559Z"}
+{"level":"http","message":"test http","timestamp":"2023-03-17T04:55:26.560Z"}
