@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { inject, injectable } from 'inversify'
+import TYPES from '../../dependency-injection/types'
 import { DatabaseClient } from '../DatabaseClient'
 import { User } from '../types'
 
@@ -7,7 +8,7 @@ import { User } from '../types'
 export class UserRepository {
   private readonly prismaClient: PrismaClient
 
-  constructor(@inject(DatabaseClient) databaseClient: DatabaseClient) {
+  constructor(@inject(TYPES.DatabaseClient) databaseClient: DatabaseClient) {
     this.prismaClient = databaseClient.getPrismaClient()
   }
 

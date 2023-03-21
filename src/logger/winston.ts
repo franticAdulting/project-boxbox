@@ -4,6 +4,7 @@ const logger = winston.createLogger({
   level: 'http',
   format: winston.format.combine(
     winston.format.timestamp(),
+    // winston.format.simple()
     winston.format.json()
   ),
   transports: [

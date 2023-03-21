@@ -1,7 +1,11 @@
-// Import the express in typescript file
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// Import the express in typescript files
 import cors from 'cors'
 import express from 'express'
-import { getLogger } from './src/logger/winston'
+import 'reflect-metadata'
+import { SError } from 'verror'
+import { getLogger } from '../logger'
+import userRouter from './router/user-router'
 
 const logger = getLogger()
 
@@ -9,7 +13,7 @@ const logger = getLogger()
 const app: express.Application = express()
 app.use(express.json())
 
-const whitelist = ['http://localhost:3000']
+// const whitelist = ['http://localhost:3000']
 // app.use(
 //   cors({
 //     origin: (origin, callback) => {
@@ -33,7 +37,18 @@ const port = 4000
 //   res.send(req.body);
 // });
 
-// app.use('/user', userRouter)
+app.use('/user', userRouter)
+
+// Error handling middleware. Define after all other `app.use()`
+// @ts-ignore
+app.use((err: SError, req, res, next) => {
+  logger.error(err.message, {
+    name: err.name,
+    cause: err.cause ?? '',
+    stack: err.stack,
+  })
+  res.status(500).send('error')
+})
 
 // Server setup
 app.listen(port, () => {

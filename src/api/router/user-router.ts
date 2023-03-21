@@ -1,30 +1,56 @@
 import * as express from 'express'
-import { appConfig } from '../config/appConfig'
+import { appConfig } from '../../config/appConfig'
+import { container } from '../../dependency-injection'
+import TYPES from '../../dependency-injection/types'
+import { UserService } from '../../domain/user/UserService'
+import { getLogger } from '../../logger/winston'
 import {
   CreateUserArgs,
   DeleteUserArgs,
-  GetUserArgs,
   UpdateUserArgs,
   UserJobName,
-} from '../user/queue/user-job-types'
-import { UserQueue } from '../user/queue/UserQueue'
+} from '../../user/queue/user-job-types'
+import { UserQueue } from '../../user/queue/UserQueue'
+import { RouterArgsValidator } from './RouterArgsValidator'
+
+const logger = getLogger()
 
 const userRouter = express.Router()
+const userService = container.get<UserService>(TYPES.UserService)
 
-userRouter.get('/', express.json(), async (req, res) => {
+userRouter.use((req, res, next) => {
+  const requestParamValidationResults =
+    RouterArgsValidator.parseUserRequest(req)
+
+  if (requestParamValidationResults.ok) {
+    next()
+  } else {
+    next(requestParamValidationResults.val)
+  }
+})
+
+userRouter.get('/', express.json(), async (req, res, next) => {
   const action = req.body.action
   const args = req.body.args
 
   switch (action) {
     case UserJobName.GetUser: {
-      const getUserArgs = args as GetUserArgs
+      const getUserArgs = RouterArgsValidator.parseGetUserArgs(args)
+
+      if (getUserArgs.ok) {
+        const user = await userService.getUserById(getUserArgs.val.id)
+        res.send({ user })
+      } else {
+        next(getUserArgs.val)
+      }
+
       break
     }
     default:
       break
   }
 
-  res.send({ yes: 'yes' })
+  // res.send({ yes: 'yes' })
 })
 
 if (appConfig.env == 'production') {
@@ -67,7 +93,8 @@ if (appConfig.env == 'production') {
     switch (action) {
       case UserJobName.CreateUser: {
         const createUserArgs = args as CreateUserArgs
-
+        const user = userService.createUser(createUserArgs.email)
+        res.send({ user })
         break
       }
       case UserJobName.UpdateUser: {
@@ -82,7 +109,7 @@ if (appConfig.env == 'production') {
         break
     }
 
-    res.send({ job })
+    // res.send({ job })
   })
 }
 

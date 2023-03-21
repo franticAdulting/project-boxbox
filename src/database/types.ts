@@ -1,3 +1,5 @@
+import { PrismaClient } from '@prisma/client'
+
 export interface User {
   id: string
   email: string
@@ -22,4 +24,13 @@ export interface DoTodayAt {
   description: string
   startDate: Date
   user: User
+}
+
+export interface IUserRepository {
+  createUser(email: string): Promise<User>
+  getUserById(id: string): Promise<User>
+}
+
+export interface IDatabaseClient {
+  getPrismaClient(): PrismaClient
 }
