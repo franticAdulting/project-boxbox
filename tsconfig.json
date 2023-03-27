@@ -18,6 +18,7 @@
       "@database/*": ["database/*"],
       "@di/*": ["dependency-injection/*"],
       "@error/*": ["error/*"],
+      "@global/*": ["global/*"],
       "@logger/*": ["logger/*"]
     }
   }

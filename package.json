@@ -25,6 +25,7 @@
     "@database": "dist/database",
     "@di": "dist/dependency-injection",
     "@error": "dist/error",
+    "@global": "dist/global",
     "@logger": "dist/logger"
   },
   "dependencies": {
