@@ -23,6 +23,7 @@
     "@api": "dist/api",
     "@config:": "dist/config",
     "@database": "dist/database",
+    "@di": "dist/dependency-injection",
     "@error": "dist/error",
     "@logger": "dist/logger"
   },

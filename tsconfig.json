@@ -16,6 +16,7 @@
       "@api/*": ["api/*"],
       "@config/*": ["config/*"],
       "@database/*": ["database/*"],
+      "@di/*": ["dependency-injection/*"],
       "@error/*": ["error/*"],
       "@logger/*": ["logger/*"]
     }
