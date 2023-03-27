@@ -29,6 +29,43 @@ export interface DoBefore {
   user: User
 }
 
+export interface CreateDoBeforeParams {
+  description: string
+  endDate: Date
+  userId: string
+}
+
+export interface GetDoBeforeByIdParams {
+  id: string
+}
+
+export interface FetchDoBeforeByUserIdParams {
+  userId: string
+}
+
+export interface FetchDoBeforeAfterParams {
+  after: Date
+}
+
+export interface FetchDoBeforeBeforeParams {
+  before: Date
+}
+
+export interface FetchDoBeforeBetweenParams {
+  after: Date
+  before: Date
+}
+
+export interface UpdateDoBeforeParams {
+  id: string
+  description?: string
+  endDate?: Date
+}
+
+export interface DeleteDoBeforeParams {
+  id: string
+}
+
 export interface DoToday {
   id: string
   description: string
