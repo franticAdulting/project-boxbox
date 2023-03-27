@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint sort-imports: 0*/
 // Import the express in typescript files
 import cors from 'cors'
 import express from 'express'
+import 'module-alias/register'
 import 'reflect-metadata'
 import { SError } from 'verror'
 import { getLogger } from '../logger'
@@ -42,12 +43,19 @@ app.use('/user', userRouter)
 // Error handling middleware. Define after all other `app.use()`
 // @ts-ignore
 app.use((err: SError, req, res, next) => {
-  logger.error(err.message, {
-    name: err.name,
-    cause: err.cause ?? '',
-    stack: err.stack,
+  // logger.error(err.message, {
+  //   name: err.name,
+  //   cause: err.cause ?? '',
+  //   stack: err.stack,
+  // })
+  res.status(500).send({
+    traceId: req.body.traceId,
+    isSuccess: false,
+    result: {
+      name: err.name,
+      message: err.message,
+    },
   })
-  res.status(500).send('error')
 })
 
 // Server setup

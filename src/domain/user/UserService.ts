@@ -24,9 +24,14 @@ export class UserService {
     return Ok(user)
   }
 
-  public async getUserById(id: string): Promise<User> {
+  public async getUserById(
+    id: string,
+    traceId: string
+  ): Promise<Result<User, SError>> {
     console.log(`gettingUser: ${id}`)
-    return await this.userRepository.getUserById(id)
+    const result = await this.userRepository.getUserById(id, traceId)
+
+    return result
   }
 
   public async updateUser(id: string, email?: string): Promise<User> {

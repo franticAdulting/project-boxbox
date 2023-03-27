@@ -1,15 +1,17 @@
+import { getLogger } from '@logger/winston'
+import { appConfig } from '@root/config/appConfig'
 import * as express from 'express'
-import { appConfig } from '../../config/appConfig'
+import { v4 } from 'uuid'
 import { container } from '../../dependency-injection'
 import TYPES from '../../dependency-injection/types'
 import { UserService } from '../../domain/user/UserService'
-import { getLogger } from '../../logger/winston'
 import {
   CreateUserArgs,
   DeleteUserArgs,
+  GetUserArgs,
   UpdateUserArgs,
   UserJobName,
-} from '../../user/queue/user-job-types'
+} from '../../user/'
 import { UserQueue } from '../../user/queue/UserQueue'
 import { RouterArgsValidator } from './RouterArgsValidator'
 
@@ -18,9 +20,14 @@ const logger = getLogger()
 const userRouter = express.Router()
 const userService = container.get<UserService>(TYPES.UserService)
 
+// Middleware for argument validation.
 userRouter.use((req, res, next) => {
   const requestParamValidationResults =
     RouterArgsValidator.parseUserRequest(req)
+
+  if (!req.body.traceId) {
+    req.body.traceId = v4()
+  }
 
   if (requestParamValidationResults.ok) {
     next()
@@ -29,28 +36,36 @@ userRouter.use((req, res, next) => {
   }
 })
 
+// Can safely assume arguments have been validated.
 userRouter.get('/', express.json(), async (req, res, next) => {
+  const traceId = req.body.traceId
   const action = req.body.action
-  const args = req.body.args
+  const args = req.body.args as GetUserArgs
+
+  let responseBody
 
   switch (action) {
     case UserJobName.GetUser: {
-      const getUserArgs = RouterArgsValidator.parseGetUserArgs(args)
+      const result = await userService.getUserById(args.id, traceId)
 
-      if (getUserArgs.ok) {
-        const user = await userService.getUserById(getUserArgs.val.id)
-        res.send({ user })
+      if (result.ok) {
+        responseBody = result.val
       } else {
-        next(getUserArgs.val)
+        next(result.val)
       }
-
       break
     }
     default:
       break
   }
 
-  // res.send({ yes: 'yes' })
+  if (responseBody) {
+    res.send({
+      traceId: req.body.traceId,
+      isSuccess: true,
+      result: responseBody,
+    })
+  }
 })
 
 if (appConfig.env == 'production') {
@@ -112,5 +127,13 @@ if (appConfig.env == 'production') {
     // res.send({ job })
   })
 }
+
+// Format responses
+userRouter.use('/', (req, res) => {
+  res.send({
+    traceId: req.body.traceId,
+    results: {},
+  })
+})
 
 export default userRouter

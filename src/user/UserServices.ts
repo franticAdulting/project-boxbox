@@ -14,10 +14,10 @@ export class UserServices {
     return await this.userRepository.createUser(email)
   }
 
-  public async getUserById(id: string): Promise<User> {
-    console.log(`gettingUser: ${id}`)
-    return await this.userRepository.getUserById(id)
-  }
+  // public async getUserById(id: string): Promise<User> {
+  //   console.log(`gettingUser: ${id}`)
+  //   return await this.userRepository.getUserById(id)
+  // }
 
   public async updateUser(id: string, email?: string): Promise<User> {
     console.log('updating user: ', id, email)
