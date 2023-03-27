@@ -2,7 +2,6 @@
 // Import the express in typescript files
 import cors from 'cors'
 import express from 'express'
-import 'module-alias/register'
 import 'reflect-metadata'
 import { SError } from 'verror'
 import { getLogger } from '../logger'
@@ -53,7 +52,6 @@ app.use((err: SError, req, res, next) => {
     isSuccess: false,
     result: {
       name: err.name,
-      message: err.message,
     },
   })
 })

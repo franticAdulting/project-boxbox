@@ -5,6 +5,23 @@ export interface User {
   email: string
 }
 
+export interface CreateUserParams {
+  email: string
+}
+
+export interface GetUserByIdParams {
+  id: string
+}
+
+export interface UpdateUserParams {
+  id: string
+  email?: string
+}
+
+export interface DeleteUserParams {
+  id: string
+}
+
 export interface DoBefore {
   id: string
   description: string

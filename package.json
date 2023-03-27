@@ -16,17 +16,7 @@
     "db:push": "Deploys database schema changes to the database. Meant for rapid iteration.",
     "db:migrate": "Commits the db schema changes. Creates a migration file.",
     "db:reset": "Resets the database and applies all migrations.",
-    "compile": "Compiles Typescript (noEmit should be set to false inside tsconfig to avoid generating js files)."
-  },
-  "_moduleAliases": {
-    "@root": "dist",
-    "@api": "dist/api",
-    "@config:": "dist/config",
-    "@database": "dist/database",
-    "@di": "dist/dependency-injection",
-    "@error": "dist/error",
-    "@global": "dist/global",
-    "@logger": "dist/logger"
+    "compile": "Compiles Typescript (noEmit should be set to true inside tsconfig to avoid generating js files)."
   },
   "dependencies": {
     "@prisma/client": "^4.11.0",
@@ -54,7 +44,6 @@
     "eslint": "^8.32.0",
     "eslint-config-prettier": "^8.6.0",
     "inversify": "^6.0.1",
-    "module-alias": "^2.2.2",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.3",
     "prettier-plugin-prisma": "^4.10.0",

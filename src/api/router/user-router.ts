@@ -1,8 +1,8 @@
-import { RouterArgsValidator } from '@api/router/RouterArgsValidator'
-import { container, TYPES } from '@di/index'
-import { appConfig } from '@root/config/appConfig'
 import * as express from 'express'
 import { v4 } from 'uuid'
+import { appConfig } from '../../config'
+import { container } from '../../dependency-injection'
+import TYPES from '../../dependency-injection/types'
 import { UserService } from '../../domain/user/UserService'
 import {
   CreateUserArgs,
@@ -12,6 +12,7 @@ import {
   UserJobName,
 } from '../../user/'
 import { UserQueue } from '../../user/queue/UserQueue'
+import { RouterArgsValidator } from './RouterArgsValidator'
 
 const userRouter = express.Router()
 const userService = container.get<UserService>(TYPES.UserService)
@@ -42,13 +43,14 @@ userRouter.get('/', express.json(), async (req, res, next) => {
 
   switch (action) {
     case UserJobName.GetUser: {
-      const result = await userService.getUserById(args.id, traceId)
+      const result = await userService.getUserById({ id: args.id }, { traceId })
 
       if (result.ok) {
         responseBody = result.val
       } else {
         next(result.val)
       }
+
       break
     }
     default:
@@ -95,41 +97,67 @@ if (appConfig.env == 'production') {
     res.send({ job })
   })
 } else {
-  userRouter.post('/', express.json(), async (req, res) => {
-    const action = req.body.action
-    const args = req.body.args
+  userRouter.post('/', express.json(), async (req, res, next) => {
+    const traceId: string = req.body.traceId
+    const action: UserJobName = req.body.action as UserJobName
 
-    let job
+    let responseBody
 
     switch (action) {
       case UserJobName.CreateUser: {
-        const createUserArgs = args as CreateUserArgs
-        const user = userService.createUser(createUserArgs.email)
-        res.send({ user })
+        const args = req.body.args as CreateUserArgs
+        const { email } = args
+
+        const result = await userService.createUser({ email }, { traceId })
+
+        if (result.ok) {
+          responseBody = result.val
+        } else {
+          next(result.val)
+        }
+
         break
       }
       case UserJobName.UpdateUser: {
-        const updateUserArgs = args as UpdateUserArgs
+        const args = req.body.args as UpdateUserArgs
+        const { id, email } = args
+
+        const result = await userService.updateUser({ id, email }, { traceId })
+
+        if (result.ok) {
+          responseBody = result.val
+        } else {
+          next(result.val)
+        }
+
         break
       }
       case UserJobName.DeleteUser: {
-        const deleteUserArgs = args as DeleteUserArgs
+        const args = req.body.args as DeleteUserArgs
+        const { id } = args
+
+        const result = await userService.deleteUser({ id }, { traceId })
+
+        if (result.ok) {
+          responseBody = result.val
+        } else {
+          next(result.val)
+        }
+
         break
       }
       default:
         break
     }
 
-    // res.send({ job })
+    if (responseBody) {
+      res.send({
+        traceId: req.body.traceId,
+        isSuccess: true,
+        result: responseBody,
+      })
+    }
   })
 }
-
-// Format responses
-userRouter.use('/', (req, res) => {
-  res.send({
-    traceId: req.body.traceId,
-    results: {},
-  })
-})
 
 export default userRouter

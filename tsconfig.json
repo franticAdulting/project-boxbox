@@ -8,18 +8,6 @@
     "strict": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "noEmit": true,
-    "moduleResolution": "node",
-    "baseUrl": "./src",
-    "paths": {
-      "@root/*": ["*"],
-      "@api/*": ["api/*"],
-      "@config/*": ["config/*"],
-      "@database/*": ["database/*"],
-      "@di/*": ["dependency-injection/*"],
-      "@error/*": ["error/*"],
-      "@global/*": ["global/*"],
-      "@logger/*": ["logger/*"]
-    }
+    "noEmit": true
   }
 }

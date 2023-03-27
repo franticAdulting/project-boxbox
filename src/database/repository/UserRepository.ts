@@ -1,12 +1,19 @@
-import { DatabaseClient } from '@database/DatabaseClient'
-import { User } from '@database/index'
-import { TYPES } from '@di/index'
-import { ErrorName } from '@error/index'
-import { getLogger } from '@logger/winston'
 import { PrismaClient } from '@prisma/client'
 import { inject, injectable } from 'inversify'
 import { Err, Ok, Result } from 'ts-results'
 import { SError } from 'verror'
+import TYPES from '../../dependency-injection/types'
+import { ErrorName } from '../../error'
+import { JobContext } from '../../global'
+import { getLogger } from '../../logger'
+import { DatabaseClient } from '../DatabaseClient'
+import {
+  CreateUserParams,
+  DeleteUserParams,
+  GetUserByIdParams,
+  UpdateUserParams,
+  User,
+} from '../types'
 
 const logger = getLogger()
 
@@ -18,20 +25,38 @@ export class UserRepository {
     this.prismaClient = databaseClient.getPrismaClient()
   }
 
-  public async createUser(email: string): Promise<User> {
-    const user = await this.prismaClient.user.create({
-      data: {
-        email,
-      },
-    })
+  public async createUser(
+    params: CreateUserParams,
+    context: JobContext
+  ): Promise<Result<User, SError>> {
+    const { email } = params
+    let user: User
 
-    return user
+    try {
+      user = await this.prismaClient.user.create({
+        data: {
+          email,
+        },
+      })
+    } catch (error) {
+      const err: Err<SError> = this.handleError(
+        error as Error,
+        ErrorName.FailedQuery,
+        context,
+        email
+      )
+
+      return err
+    }
+
+    return Ok(user)
   }
 
   public async getUserById(
-    id: string,
-    traceId: string
+    params: GetUserByIdParams,
+    context: JobContext
   ): Promise<Result<User, SError>> {
+    const { id } = params
     let user: User
 
     try {
@@ -41,47 +66,101 @@ export class UserRepository {
         },
       })
     } catch (error) {
-      const typedError = error as Error
-      logger.error({
-        traceId,
-        name: ErrorName.FailedQuery,
-        params: { id },
-        error,
-      })
-
-      return Err(
-        new SError(
-          { name: ErrorName.FailedQuery, cause: typedError },
-          'Query failed to find User'
-        )
+      const err: Err<SError> = this.handleError(
+        error as Error,
+        ErrorName.FailedQuery,
+        context,
+        id
       )
+
+      return err
     }
 
     return Ok(user)
   }
 
-  public async updateUser(id: string, email?: string): Promise<User> {
-    await this.prismaClient.user.findFirstOrThrow({
-      where: {
-        id,
-      },
-    })
+  public async updateUser(
+    params: UpdateUserParams,
+    context: JobContext
+  ): Promise<Result<User, SError>> {
+    const { id, email } = params
+    let user: User
 
-    return await this.prismaClient.user.update({
-      where: {
+    try {
+      await this.prismaClient.user.findFirstOrThrow({
+        where: {
+          id,
+        },
+      })
+
+      user = await this.prismaClient.user.update({
+        where: {
+          id,
+        },
+        data: {
+          email,
+        },
+      })
+    } catch (error) {
+      const err: Err<SError> = this.handleError(
+        error as Error,
+        ErrorName.FailedQuery,
+        context,
         id,
-      },
-      data: {
-        email,
-      },
-    })
+        email
+      )
+
+      return err
+    }
+
+    return Ok(user)
   }
 
-  public async deleteUser(id: string): Promise<User> {
-    return await this.prismaClient.user.delete({
-      where: {
-        id,
-      },
+  public async deleteUser(
+    params: DeleteUserParams,
+    context: JobContext
+  ): Promise<Result<User, SError>> {
+    const { id } = params
+    let user: User
+
+    try {
+      user = await this.prismaClient.user.delete({
+        where: {
+          id,
+        },
+      })
+    } catch (error) {
+      const err: Err<SError> = this.handleError(
+        error as Error,
+        ErrorName.FailedQuery,
+        context,
+        id
+      )
+
+      return err
+    }
+
+    return Ok(user)
+  }
+
+  private handleError(
+    error: Error,
+    name: ErrorName,
+    context: JobContext,
+    ...params: any[]
+  ): Err<SError> {
+    logger.error({
+      traceId: context.traceId,
+      name,
+      params: { params },
+      error,
     })
+
+    return Err(
+      new SError(
+        { name: ErrorName.FailedQuery, cause: error },
+        'Query failed to find User'
+      )
+    )
   }
 }

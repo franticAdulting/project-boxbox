@@ -1,9 +1,9 @@
-import { DatabaseClient, UserRepository } from '@database/index'
-import { TYPES } from '@di/index'
 import { Container } from 'inversify'
+import { DatabaseClient, UserRepository } from '../database'
 import { UserService } from '../domain/user/UserService'
+import TYPES from './types'
 
-const container = new Container()
+export const container = new Container()
 container
   .bind<DatabaseClient>(TYPES.DatabaseClient)
   .to(DatabaseClient)
@@ -16,5 +16,3 @@ container
   .bind<UserService>(TYPES.UserService)
   .to(UserService)
   .inSingletonScope()
-
-export { container }

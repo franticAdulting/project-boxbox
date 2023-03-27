@@ -1,8 +1,16 @@
-import { User, UserRepository } from '@database/index'
-import { TYPES } from '@di/index'
 import { inject, injectable } from 'inversify'
-import { Err, Ok, Result } from 'ts-results'
+import { Result } from 'ts-results'
 import { SError } from 'verror'
+import {
+  CreateUserParams,
+  DeleteUserParams,
+  GetUserByIdParams,
+  UpdateUserParams,
+  User,
+  UserRepository,
+} from '../../database'
+import TYPES from '../../dependency-injection/types'
+import { JobContext } from '../../global/types'
 
 @injectable()
 export class UserService {
@@ -12,35 +20,39 @@ export class UserService {
     this.userRepository = userRepository
   }
 
-  public async createUser(email: string): Promise<Result<User, SError>> {
-    if (!email) {
-      return Err(new SError('Invalid email', email))
-    }
-
-    console.log('creatingUser: ', email)
-
-    const user = await this.userRepository.createUser(email)
-
-    return Ok(user)
-  }
-
-  public async getUserById(
-    id: string,
-    traceId: string
+  public async createUser(
+    params: CreateUserParams,
+    context: JobContext
   ): Promise<Result<User, SError>> {
-    console.log(`gettingUser: ${id}`)
-    const result = await this.userRepository.getUserById(id, traceId)
+    const result = await this.userRepository.createUser(params, context)
 
     return result
   }
 
-  public async updateUser(id: string, email?: string): Promise<User> {
-    console.log('updating user: ', id, email)
-    return await this.userRepository.updateUser(id, email)
+  public async getUserById(
+    params: GetUserByIdParams,
+    context: JobContext
+  ): Promise<Result<User, SError>> {
+    const result = await this.userRepository.getUserById(params, context)
+
+    return result
   }
 
-  public async deleteUser(id: string): Promise<User> {
-    console.log('deleting user: ', id)
-    return await this.userRepository.deleteUser(id)
+  public async updateUser(
+    params: UpdateUserParams,
+    context: JobContext
+  ): Promise<Result<User, SError>> {
+    const result = await this.userRepository.updateUser(params, context)
+
+    return result
+  }
+
+  public async deleteUser(
+    params: DeleteUserParams,
+    context: JobContext
+  ): Promise<Result<User, SError>> {
+    const result = await this.userRepository.deleteUser(params, context)
+
+    return result
   }
 }
