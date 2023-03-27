@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ErrorName } from '@error/index'
 import { Err, Ok, Result } from 'ts-results'
 import { SError } from 'verror'
-import { ErrorName } from '../../error'
 import { GetUserArgs } from '../../user/queue/user-job-types'
 
 interface UserRequestParams {

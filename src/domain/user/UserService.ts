@@ -1,8 +1,8 @@
+import { User, UserRepository } from '@database/index'
+import { TYPES } from '@di/index'
 import { inject, injectable } from 'inversify'
 import { Err, Ok, Result } from 'ts-results'
 import { SError } from 'verror'
-import { User, UserRepository } from '../../database'
-import TYPES from '../../dependency-injection/types'
 
 @injectable()
 export class UserService {

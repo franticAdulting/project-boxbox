@@ -1,8 +1,7 @@
+import { DatabaseClient, UserRepository } from '@database/index'
+import { TYPES } from '@di/index'
 import { Container } from 'inversify'
-import { UserRepository } from '../database'
-import { DatabaseClient } from '../database/DatabaseClient'
 import { UserService } from '../domain/user/UserService'
-import TYPES from './types'
 
 const container = new Container()
 container

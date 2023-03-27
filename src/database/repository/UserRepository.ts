@@ -1,12 +1,12 @@
+import { DatabaseClient } from '@database/DatabaseClient'
+import { User } from '@database/index'
+import { TYPES } from '@di/index'
+import { ErrorName } from '@error/index'
+import { getLogger } from '@logger/winston'
 import { PrismaClient } from '@prisma/client'
 import { inject, injectable } from 'inversify'
 import { Err, Ok, Result } from 'ts-results'
 import { SError } from 'verror'
-import TYPES from '../../dependency-injection/types'
-import { ErrorName } from '../../error'
-import { getLogger } from '../../logger/winston'
-import { DatabaseClient } from '../DatabaseClient'
-import { User } from '../types'
 
 const logger = getLogger()
 

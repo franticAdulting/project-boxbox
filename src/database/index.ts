@@ -1,3 +1,4 @@
+export * from './DatabaseClient'
 export * from './repository/DoBeforeRepository'
 export * from './repository/DoTodayAtRepository'
 export * from './repository/DoTodayRepository'

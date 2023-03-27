@@ -1,9 +1,8 @@
-import { getLogger } from '@logger/winston'
+import { RouterArgsValidator } from '@api/router/RouterArgsValidator'
+import { container, TYPES } from '@di/index'
 import { appConfig } from '@root/config/appConfig'
 import * as express from 'express'
 import { v4 } from 'uuid'
-import { container } from '../../dependency-injection'
-import TYPES from '../../dependency-injection/types'
 import { UserService } from '../../domain/user/UserService'
 import {
   CreateUserArgs,
@@ -13,9 +12,6 @@ import {
   UserJobName,
 } from '../../user/'
 import { UserQueue } from '../../user/queue/UserQueue'
-import { RouterArgsValidator } from './RouterArgsValidator'
-
-const logger = getLogger()
 
 const userRouter = express.Router()
 const userService = container.get<UserService>(TYPES.UserService)
