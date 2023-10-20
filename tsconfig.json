@@ -8,6 +8,7 @@
     "strict": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "noEmit": true
+    "noEmit": false,
+    "sourceMap": true // Setting true to attach debugger
   }
 }
