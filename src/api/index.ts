@@ -5,7 +5,8 @@ import express from 'express'
 import 'reflect-metadata'
 import { SError } from 'verror'
 import { getLogger } from '../logger'
-import userRouter from './router/user-router'
+import resourceRouter from './router/resource-router'
+// import userRouter from './router/user-router'
 
 const logger = getLogger()
 
@@ -37,7 +38,8 @@ const port = 4000
 //   res.send(req.body);
 // });
 
-app.use('/user', userRouter)
+app.use('/resource', resourceRouter)
+// app.use('/user', userRouter)
 
 // Error handling middleware. Define after all other `app.use()`
 // @ts-ignore

@@ -1,6 +1,10 @@
 import { Container } from 'inversify'
-import { DatabaseClient, UserRepository } from '../database'
-import { UserService } from '../domain/user/UserService'
+import { DatabaseClient } from '../database'
+import {
+  NaturalResourceRepository,
+  NaturalResourceService,
+} from '../natural-resource'
+import { ResourceLocationRepository } from '../resource-location'
 import TYPES from './types'
 
 export const container = new Container()
@@ -9,10 +13,14 @@ container
   .to(DatabaseClient)
   .inSingletonScope()
 container
-  .bind<UserRepository>(TYPES.UserRepository)
-  .to(UserRepository)
+  .bind<NaturalResourceRepository>(TYPES.NaturalResourceRepository)
+  .to(NaturalResourceRepository)
   .inSingletonScope()
 container
-  .bind<UserService>(TYPES.UserService)
-  .to(UserService)
+  .bind<ResourceLocationRepository>(TYPES.ResourceLocationRepository)
+  .to(ResourceLocationRepository)
+  .inSingletonScope()
+container
+  .bind<NaturalResourceService>(TYPES.NaturalResourceService)
+  .to(NaturalResourceService)
   .inSingletonScope()

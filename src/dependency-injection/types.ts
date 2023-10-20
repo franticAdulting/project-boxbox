@@ -1,7 +1,8 @@
 const TYPES = {
   DatabaseClient: Symbol.for('DatabaseClient'),
-  UserRepository: Symbol.for('UserRepository'),
-  UserService: Symbol.for('UserService'),
+  NaturalResourceRepository: Symbol.for('NaturalResourceRepository'),
+  ResourceLocationRepository: Symbol.for('ResourceLocationRepository'),
+  NaturalResourceService: Symbol.for('NaturalResourceService'),
 }
 
 export default TYPES

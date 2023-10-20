@@ -17,7 +17,7 @@ const appConvict = Convict({
     },
     host: {
       format: String,
-      default: 'localhost',
+      default: 'postgres',
       env: 'POSTGRES_HOST',
     },
     port: {

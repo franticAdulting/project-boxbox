@@ -3,54 +3,48 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("POSTGRES_URL")
+  provider = "mongodb"
+  url      = env("MONGO_URL")
 }
 
-model User {
-  id         String      @id @default(uuid())
-  email      String      @unique
-  doTodays   DoToday[]
-  doTodayAts DoTodayAt[]
-  doBefores  DoBefore[]
-  createdAt  DateTime    @default(now()) @map("created_at")
-  updatedAt  DateTime    @default(now()) @map("updated_at")
+// enum CrafterClass {
+//   Carpenter
+//   Blacksmith
+//   Armorer
+//   Goldsmith
+//   Leatherworker
+//   Weaver
+//   Alchemist
+//   Culinarian
+// }
 
-  @@map("user")
+model ResourceLocation {
+  id                 String            @id @default(auto()) @map("_id") @db.ObjectId
+  region             String
+  zone               String
+  area               String
+  gatherLevel        Int
+  NaturalResources   NaturalResource[] @relation(fields: [naturalResourceIds], references: [id])
+  naturalResourceIds String[]          @db.ObjectId
 }
 
-model DoToday {
-  id          String   @id @default(uuid())
-  userId      String   @map("user_id")
-  user        User     @relation(fields: [userId], references: [id])
-  description String
-  startDate   DateTime @map("start_date")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @default(now()) @map("updated_at")
-
-  @@map("do_today")
+model NaturalResource {
+  id          String             @id @default(auto()) @map("_id") @db.ObjectId
+  name        String             @unique
+  itemLevel   Int
+  gatherClass String
+  isHidden    Boolean
+  locations   ResourceLocation[] @relation(fields: [locationIds], references: [id])
+  locationIds String[]           @db.ObjectId
 }
 
-model DoTodayAt {
-  id          String   @id @default(uuid())
-  userId      String   @map("user_id")
-  user        User     @relation(fields: [userId], references: [id])
-  description String
-  startDate   DateTime @map("start_date")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @default(now()) @map("updated_at")
-
-  @@map("do_today_at")
-}
-
-model DoBefore {
-  id          String   @id @default(uuid())
-  userId      String   @map("user_id")
-  user        User     @relation(fields: [userId], references: [id])
-  description String
-  endDate     DateTime @map("end_date")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @default(now()) @map("updated_at")
-
-  @@map("do_before")
-}
+// model crafted_item {
+//   id            String @id @default(uuid()) @map("_id") @db.ObjectId
+//   name          String
+//   itemLevel     Int
+//   craftingClass String
+//   difficulty    Int
+//   durability    Int
+//   yield         Int
+//   recipe        Json
+// }

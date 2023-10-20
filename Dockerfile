@@ -1,14 +1,22 @@
-FROM node:16-slim AS development
-ENV NODE_ENV development
+FROM node:19
 
 WORKDIR /server
 
 COPY package.json .
 COPY yarn.lock .
-RUN yarn install
+
+COPY prisma ./prisma/
+
+COPY .env ./
+
+COPY tsconfig.json ./
 
 COPY . .
 
+RUN yarn install
+
+RUN npx prisma generate
+
 EXPOSE 4000
 
-CMD ["yarn", "start"]
+CMD yarn start:prod

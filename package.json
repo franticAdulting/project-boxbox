@@ -8,18 +8,23 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
-    "start-server": "docker-compose -f docker-compose.dev.yml up --build --force-recreate",
+    "start:background": "docker-compose -f docker-compose.bg.yml up --build --force-recreate",
+    "start-server": "docker-compose -f docker-compose.yml up --build --force-recreate",
+    "start:prod": "ts-node src/api/index.ts",
     "start": "nodemon src/api/index.ts",
     "compile": "tsc"
   },
   "scriptsComments": {
     "db:push": "Deploys database schema changes to the database. Meant for rapid iteration.",
-    "db:migrate": "Commits the db schema changes. Creates a migration file.",
+    "db:migrate": "Commits the db schema changes. Creates a migration file.***Prisma does not support migrate for MongoDB***",
     "db:reset": "Resets the database and applies all migrations.",
+    "start-server": "Build Docker image and spin up Containers.",
+    "start:prod": "Start production-level server.",
+    "start": "Default start. Start server for local.",
     "compile": "Compiles Typescript (noEmit should be set to true inside tsconfig to avoid generating js files)."
   },
   "dependencies": {
-    "@prisma/client": "^4.11.0",
+    "@prisma/client": "^5.4.2",
     "@types/convict": "^6.1.1",
     "@types/express": "^4.17.15",
     "@types/node": "^18.11.18",
@@ -47,7 +52,7 @@
     "nodemon": "^2.0.20",
     "prettier": "^2.8.3",
     "prettier-plugin-prisma": "^4.10.0",
-    "prisma": "^4.11.0",
+    "prisma": "^5.4.2",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.4"
