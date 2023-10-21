@@ -2,9 +2,14 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// datasource db {
+//   provider = "mongodb"
+//   url      = env("MONGO_URL")
+// }
+
 datasource db {
-  provider = "mongodb"
-  url      = env("MONGO_URL")
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
 }
 
 // enum CrafterClass {
@@ -18,25 +23,82 @@ datasource db {
 //   Culinarian
 // }
 
-model ResourceLocation {
-  id                 String            @id @default(auto()) @map("_id") @db.ObjectId
-  region             String
-  zone               String
-  area               String
-  gatherLevel        Int
-  NaturalResources   NaturalResource[] @relation(fields: [naturalResourceIds], references: [id])
-  naturalResourceIds String[]          @db.ObjectId
+model region {
+  id        String     @id @default(uuid())
+  name      String     @unique
+  label     String
+  zones     zone[]
+  locations location[]
 }
 
-model NaturalResource {
-  id          String             @id @default(auto()) @map("_id") @db.ObjectId
-  name        String             @unique
-  itemLevel   Int
-  gatherClass String
-  isHidden    Boolean
-  locations   ResourceLocation[] @relation(fields: [locationIds], references: [id])
-  locationIds String[]           @db.ObjectId
+model zone {
+  id          String     @id @default(uuid())
+  name        String     @unique
+  label       String
+  region      region     @relation(fields: [region_name], references: [name], onDelete: Cascade)
+  region_name String
+  areas       area[]
+  locations   location[]
 }
+
+model area {
+  id        String     @id @default(uuid())
+  name      String     @unique
+  label     String
+  zone      zone       @relation(fields: [zone_name], references: [name], onDelete: Cascade)
+  zone_name String
+  locations location[]
+}
+
+model location {
+  id              String              @id @default(uuid())
+  gather_level    Int
+  region          region              @relation(fields: [region_name], references: [name], onDelete: Cascade)
+  region_name     String
+  zone            zone                @relation(fields: [zone_name], references: [name], onDelete: Cascade)
+  zone_name       String
+  area            area                @relation(fields: [area_name], references: [name], onDelete: Cascade)
+  area_name       String
+  resources_found resource_location[]
+}
+
+model resource {
+  id                 String              @id @default(uuid())
+  name               String
+  label              String
+  item_level         Int
+  gather_class       String
+  is_hidden          Boolean
+  resource_locations resource_location[]
+}
+
+model resource_location {
+  id          String   @id @default(uuid())
+  resource    resource @relation(fields: [resource_id], references: [id])
+  resource_id String
+  location    location @relation(fields: [location_id], references: [id])
+  location_id String
+}
+
+// model ResourceLocation {
+//   id                 String            @id @default(uuid())
+//   region             String
+//   zone               String
+//   area               String
+//   gatherLevel        Int
+//   NaturalResources   NaturalResource[] @relation(fields: [naturalResourceIds], references: [id])
+//   naturalResourceIds String[]          @db.ObjectId
+// }
+
+// model NaturalResource {
+//   id          String             @id @default(uuid())
+//   name        String             @unique
+//   itemLevel   Int
+//   gatherClass String
+//   isHidden    Boolean
+//   locations   ResourceLocation[] @relation(fields: [locationIds], references: [id])
+//   locationIds String[]           @db.ObjectId
+// }
 
 // model crafted_item {
 //   id            String @id @default(uuid()) @map("_id") @db.ObjectId

@@ -1,5 +1,6 @@
 import { Container } from 'inversify'
 import { DatabaseClient } from '../database'
+import { LocationRepository, LocationService } from '../domain/location'
 import {
   NaturalResourceRepository,
   NaturalResourceService,
@@ -12,6 +13,15 @@ container
   .bind<DatabaseClient>(TYPES.DatabaseClient)
   .to(DatabaseClient)
   .inSingletonScope()
+container
+  .bind<LocationRepository>(TYPES.LocationRepository)
+  .to(LocationRepository)
+  .inSingletonScope()
+container
+  .bind<LocationService>(TYPES.LocationService)
+  .to(LocationService)
+  .inSingletonScope()
+
 container
   .bind<NaturalResourceRepository>(TYPES.NaturalResourceRepository)
   .to(NaturalResourceRepository)

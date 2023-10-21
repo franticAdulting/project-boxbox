@@ -5,7 +5,7 @@ import express from 'express'
 import 'reflect-metadata'
 import { SError } from 'verror'
 import { getLogger } from '../logger'
-import resourceRouter from './router/resource-router'
+import resourceRouter from './router/resource-route'
 // import userRouter from './router/user-router'
 
 const logger = getLogger()
