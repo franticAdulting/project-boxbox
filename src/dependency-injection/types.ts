@@ -1,10 +1,12 @@
 const TYPES = {
   DatabaseClient: Symbol.for('DatabaseClient'),
-  NaturalResourceRepository: Symbol.for('NaturalResourceRepository'),
-  ResourceLocationRepository: Symbol.for('ResourceLocationRepository'),
-  NaturalResourceService: Symbol.for('NaturalResourceService'),
   LocationRepository: Symbol.for('LocationRepository'),
   LocationService: Symbol.for('LocationService'),
+  DataGeneratorService: Symbol.for('DataGeneratorService'),
+  RecipeRepository: Symbol.for('RecipeRepository'),
+  RecipeService: Symbol.for('RecipeService'),
+  ResourceRepository: Symbol.for('ResourceRepository'),
+  ResourceService: Symbol.for('ResourceService'),
 }
 
 export default TYPES

@@ -12,17 +12,6 @@ datasource db {
   url      = env("POSTGRES_URL")
 }
 
-// enum CrafterClass {
-//   Carpenter
-//   Blacksmith
-//   Armorer
-//   Goldsmith
-//   Leatherworker
-//   Weaver
-//   Alchemist
-//   Culinarian
-// }
-
 model region {
   id        String     @id @default(uuid())
   name      String     @unique
@@ -60,6 +49,8 @@ model location {
   area            area                @relation(fields: [area_name], references: [name], onDelete: Cascade)
   area_name       String
   resources_found resource_location[]
+
+  // @@unique(fields: [region_name, zone_name, area_name, gather_level], name: "uniqueLocationParams")
 }
 
 model resource {
@@ -78,6 +69,24 @@ model resource_location {
   resource_id String
   location    location @relation(fields: [location_id], references: [id])
   location_id String
+}
+
+model material {
+  id     String   @id @default(uuid())
+  name   String
+  amount Int
+  type   String
+  recipe recipe[]
+}
+
+model recipe {
+  id            String     @id @default(uuid())
+  name          String
+  label         String
+  item_level    Int
+  crafter_class String
+  yields        Int
+  materials     material[]
 }
 
 // model ResourceLocation {

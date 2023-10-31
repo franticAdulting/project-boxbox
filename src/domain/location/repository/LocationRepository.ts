@@ -2,8 +2,8 @@ import { PrismaClient } from '@prisma/client'
 import { inject, injectable } from 'inversify'
 import { Result } from 'ts-results'
 import { SError } from 'verror'
-import { DatabaseClient } from '../../../database'
 import TYPES from '../../../dependency-injection/types'
+import { DatabaseClient } from '../../global'
 import { Area, AreaRepository } from './AreaRepository'
 import { Region, RegionRepository } from './RegionRespository'
 import { Zone, ZoneRepository } from './ZoneRepository'
@@ -34,8 +34,8 @@ export class LocationRepository {
     return await this.regionRepository.deleteRegionByName(name)
   }
 
-  public async createZone(name: string, label: string, regionId: string): Promise<Result<Zone, SError>> {
-    return await this.zoneRepository.createZone(name, label, regionId)
+  public async createZone(name: string, label: string, regionName: string): Promise<Result<Zone, SError>> {
+    return await this.zoneRepository.createZone(name, label, regionName)
   }
 
   public async getZoneByName(name: string): Promise<Result<Zone | null, SError>> {
@@ -46,8 +46,8 @@ export class LocationRepository {
     return await this.zoneRepository.deleteZoneByName(name)
   }
 
-  public async createArea(name: string, label: string, zoneId: string): Promise<Result<Area, SError>> {
-    return await this.areaRepository.createArea(name, label, zoneId)
+  public async createArea(name: string, label: string, zoneName: string): Promise<Result<Area, SError>> {
+    return await this.areaRepository.createArea(name, label, zoneName)
   }
 
   public async getAreaByName(name: string): Promise<Result<Area | null, SError>> {
@@ -56,5 +56,12 @@ export class LocationRepository {
 
   public async deleteAreaByName(name: string): Promise<Result<Area, SError>> {
     return await this.areaRepository.deleteAreaByName(name)
+  }
+
+  // With cascade enabled, deleting all the regions should delete the entire db.
+  public async deleteAllData(): Promise<void> {
+    await this.areaRepository.deleteAllAreas()
+    await this.zoneRepository.deleteAllZones()
+    await this.regionRepository.deleteAllRegions()
   }
 }

@@ -12,11 +12,7 @@ export class ZoneRepository {
     this.prismaClient = prismaClient
   }
 
-  public async createZone(
-    name: string,
-    label: string,
-    regionName: string
-  ): Promise<Result<Zone, SError>> {
+  public async createZone(name: string, label: string, regionName: string): Promise<Result<Zone, SError>> {
     const result = await this.prismaClient.zone.create({
       data: {
         name,
@@ -32,9 +28,7 @@ export class ZoneRepository {
     return Ok(result)
   }
 
-  public async getZoneByName(
-    name: string
-  ): Promise<Result<Zone | null, SError>> {
+  public async getZoneByName(name: string): Promise<Result<Zone | null, SError>> {
     const result = await this.prismaClient.zone.findFirst({
       where: {
         name,
@@ -52,5 +46,9 @@ export class ZoneRepository {
     })
 
     return Ok(result)
+  }
+
+  public async deleteAllZones() {
+    await this.prismaClient.zone.deleteMany({})
   }
 }

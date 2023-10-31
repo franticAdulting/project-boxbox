@@ -4,8 +4,8 @@ import cors from 'cors'
 import express from 'express'
 import 'reflect-metadata'
 import { SError } from 'verror'
+import recipeRouter from '../domain/recipe/route/recipe-route'
 import { getLogger } from '../logger'
-import resourceRouter from './router/resource-route'
 // import userRouter from './router/user-router'
 
 const logger = getLogger()
@@ -38,7 +38,9 @@ const port = 4000
 //   res.send(req.body);
 // });
 
-app.use('/resource', resourceRouter)
+app.use('/recipe', recipeRouter)
+
+// app.use('/resource', resourceRouter)
 // app.use('/user', userRouter)
 
 // Error handling middleware. Define after all other `app.use()`

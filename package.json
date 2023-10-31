@@ -11,6 +11,7 @@
     "start:background": "docker-compose -f docker-compose.bg.yml up --build --force-recreate",
     "start-server": "docker-compose -f docker-compose.yml up --build --force-recreate",
     "start:prod": "ts-node src/api/index.ts",
+    "start:generate-data": "nodemon src/generate-data/main.ts",
     "start": "nodemon src/api/index.ts",
     "compile": "tsc"
   },
@@ -20,8 +21,12 @@
     "db:reset": "Resets the database and applies all migrations.",
     "start-server": "Build Docker image and spin up Containers.",
     "start:prod": "Start production-level server.",
+    "start:generate-data": "Start generate-data process to populate the database.",
     "start": "Default start. Start server for local.",
     "compile": "Compiles Typescript (noEmit should be set to true inside tsconfig to avoid generating js files)."
+  },
+  "prisma": {
+    "seed": "ts-node --transpile-only prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.4.2",

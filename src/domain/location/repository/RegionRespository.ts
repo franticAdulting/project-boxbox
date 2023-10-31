@@ -43,4 +43,8 @@ export class RegionRepository {
 
     return Ok(result)
   }
+
+  public async deleteAllRegions(): Promise<void> {
+    await this.prismaClient.region.deleteMany({})
+  }
 }
